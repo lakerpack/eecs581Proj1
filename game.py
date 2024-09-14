@@ -250,7 +250,7 @@ def handlePlayerTurn(screen, currentPlayer, enemy):
                     if 0 <= gridX < COLS and 0 <= gridY < ROWS:
                         if enemy.guesses[gridY][gridX] == 0:
                             enemy.check_hit(gridX, gridY)
-                            drawBoard(screen, enemy)
+                            drawBoard(screen, currentPlayer)
                             pygame.display.flip()
                             if check_for_win(enemy):
                                 font = pygame.font.Font(None, 48)
