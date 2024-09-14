@@ -51,11 +51,13 @@ class Player:
 
 def getCount(screen):
     font = pygame.font.Font(None, 36)
-    title_font = pygame.font.Font(None, 48)
+    titleFont = pygame.font.Font(None, 48)
+    smallFont = pygame.font.Font(None, 24)
     
-    title = title_font.render("Battleship", True, (5, 5, 5))
+    title = titleFont.render("Battleship", True, (5, 5, 5))
     prompt = font.render("How many ships would you like? (1-5)", True, (5, 5, 5))
-    start_text = font.render("Press ENTER to start", True, (5, 5, 5))
+    startText = font.render("Press ENTER to start", True, (5, 5, 5))
+    disclaimer = smallFont.render("Use the up and down arrows to adjust the # of ships", True, (5, 5, 5))
 
     ship_count = 1
     running = True
@@ -65,7 +67,9 @@ def getCount(screen):
         
         screen.blit(title, (GAMEWIDTH//2 - title.get_width()//2, 100))
         screen.blit(prompt, (GAMEWIDTH//2 - prompt.get_width()//2, 200))
-        screen.blit(start_text, (GAMEWIDTH//2 - start_text.get_width()//2, 400))
+        screen.blit(startText, (GAMEWIDTH//2 - startText.get_width()//2, 400))
+        screen.blit(startText, (GAMEWIDTH//2 - startText.get_width()//2, 400))
+        screen.blit(disclaimer, (GAMEWIDTH//2 - disclaimer.get_width()//2, 450))  
 
         count_text = font.render(str(ship_count), True, (5, 5, 5))
         screen.blit(count_text, (GAMEWIDTH//2 - count_text.get_width()//2, 300))
