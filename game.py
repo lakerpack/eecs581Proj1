@@ -68,12 +68,19 @@ def startBoard(screen, count, player):
     xOffset = 150
 
     font = pygame.font.Font(None, 36)
+    smallFont = pygame.font.Font(None, 16)
     title = font.render("Place Your Ships", True, (5, 5, 5))
+    instruction = smallFont.render("Press R to rotate your placement. Click to place a ship.", True, (5, 5, 5))
+
+    ships = [val + 1 for val in range(count)]
+    currentShip = ships.pop()
+    direction = 0
 
     waiting = True
     while waiting:
         screen.fill("skyblue")
         screen.blit(title, (GAMEWIDTH // 2 - title.get_width() // 2, yOffset - 75))
+        screen.blit(instruction, (GAMEWIDTH // 2 - instruction.get_width() // 2, yOffset + 315))
 
         drawLabels(screen, xOffset, yOffset)
 
@@ -85,17 +92,31 @@ def startBoard(screen, count, player):
             for y in range(ROWS):
                 pyRect = (x * BLOCKWIDTH + xOffset, y * BLOCKHEIGHT + yOffset, BLOCKWIDTH, BLOCKHEIGHT)
                 
-                if x == hoverX and y == hoverY and 0 <= x < COLS and 0 <= y < ROWS:
-                    pygame.draw.rect(screen, (200, 200, 200), pyRect)
+                should_highlight = False
+                if 0 <= hoverX < COLS and 0 <= hoverY < ROWS:
+                    if direction == 0 and hoverY == y and hoverX <= x < hoverX + currentShip:
+                        should_highlight = True
+                    elif direction == 1 and hoverX == x and hoverY <= y < hoverY + currentShip:
+                        should_highlight = True
+                    elif direction == 2 and hoverY == y and hoverX - currentShip < x <= hoverX:
+                        should_highlight = True
+                    elif direction == 3 and hoverX == x and hoverY - currentShip < y <= hoverY:
+                        should_highlight = True
+
+                if should_highlight:
+                    pygame.draw.rect(screen, (155, 155, 155), pyRect)
                 
                 pygame.draw.rect(screen, lineColor, pyRect, 1)
 
-        print(hoverX, hoverY)
+        # print(hoverX, hoverY)
         pygame.display.flip()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    direction = (direction + 1) % 4
 
 
 def drawBoard(screen, user):
