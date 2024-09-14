@@ -6,12 +6,48 @@ ROWS, COLS = 10, 10
 BLOCKHEIGHT, BLOCKWIDTH = 30, 30
 GAMEHEIGHT, GAMEWIDTH = 700, 600
 
+SHIPCOLORS = {1: (255, 0, 0), 2: (0, 255, 0), 3: (0, 0, 255), 4: (255, 255, 0), 5: (255, 0, 255)}
 
 class Player:
-    def __init__(self):
-        self.board = [[[0] * COLS] * ROWS]
-        guesses = [[[0] * COLS] * ROWS]
+    def __init__(self, num):
+        self.num = num
+        self.board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+        self.guesses = [[0 for _ in range(COLS)] for _ in range(ROWS)]
     
+    def place_ship(self, x, y, size, direction):
+        if direction == 0: 
+            if x + size > COLS:
+                return False
+            for i in range(size):
+                if self.board[y][x + i] != 0:
+                    return False
+            for i in range(size):
+                self.board[y][x + i] = size
+        elif direction == 1: 
+            if y + size > ROWS:
+                return False
+            for i in range(size):
+                if self.board[y + i][x] != 0:
+                    return False
+            for i in range(size):
+                self.board[y + i][x] = size
+        elif direction == 2: 
+            if x - size + 1 < 0:
+                return False
+            for i in range(size):
+                if self.board[y][x - i] != 0:
+                    return False
+            for i in range(size):
+                self.board[y][x - i] = size
+        elif direction == 3: 
+            if y - size + 1 < 0:
+                return False
+            for i in range(size):
+                if self.board[y - i][x] != 0:
+                    return False
+            for i in range(size):
+                self.board[y - i][x] = size
+        return True
 
 def getCount(screen):
     font = pygame.font.Font(None, 36)
@@ -69,7 +105,7 @@ def startBoard(screen, count, player):
 
     font = pygame.font.Font(None, 36)
     smallFont = pygame.font.Font(None, 16)
-    title = font.render("Place Your Ships", True, (5, 5, 5))
+    title = font.render(f"Place Your Ships Player {player.num}", True, (5, 5, 5))
     instruction = smallFont.render("Press R to rotate your placement. Click to place a ship.", True, (5, 5, 5))
 
     ships = [val + 1 for val in range(count)]
@@ -94,17 +130,21 @@ def startBoard(screen, count, player):
                 
                 should_highlight = False
                 if 0 <= hoverX < COLS and 0 <= hoverY < ROWS:
-                    if direction == 0 and hoverY == y and hoverX <= x < hoverX + currentShip:
+                    if direction == 0 and hoverY == y and hoverX <= x < hoverX + currentShip and hoverX + currentShip <= COLS:
                         should_highlight = True
-                    elif direction == 1 and hoverX == x and hoverY <= y < hoverY + currentShip:
+                    elif direction == 1 and hoverX == x and hoverY <= y < hoverY + currentShip and hoverY + currentShip <= ROWS:
                         should_highlight = True
-                    elif direction == 2 and hoverY == y and hoverX - currentShip < x <= hoverX:
+                    elif direction == 2 and hoverY == y and hoverX - currentShip < x <= hoverX and hoverX - currentShip + 1 >= 0:
                         should_highlight = True
-                    elif direction == 3 and hoverX == x and hoverY - currentShip < y <= hoverY:
+                    elif direction == 3 and hoverX == x and hoverY - currentShip < y <= hoverY and hoverY - currentShip + 1 >= 0:
                         should_highlight = True
 
                 if should_highlight:
                     pygame.draw.rect(screen, (155, 155, 155), pyRect)
+                elif player.board[y][x] != 0:
+                    ship_size = player.board[y][x]
+                    ship_color = SHIPCOLORS.get(ship_size, (0, 255, 0))
+                    pygame.draw.rect(screen, ship_color, pyRect)
                 
                 pygame.draw.rect(screen, lineColor, pyRect, 1)
 
@@ -117,6 +157,14 @@ def startBoard(screen, count, player):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
                     direction = (direction + 1) % 4
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if 0 <= hoverX < COLS and 0 <= hoverY < ROWS:
+                        if player.place_ship(hoverX, hoverY, currentShip, direction):
+                            if ships:
+                                currentShip = ships.pop()
+                            else:
+                                waiting = False
 
 
 def drawBoard(screen, user):
@@ -146,9 +194,9 @@ def main():
     count = getCount(screen)
     setUp = True
 
-    playerOne = Player()
-    playerTwo = Player()
-    print(playerOne.board)
+    playerOne = Player(1)
+    playerTwo = Player(2)
+    # print(playerOne.board)
 
     while game:
         screen.fill("skyblue")
