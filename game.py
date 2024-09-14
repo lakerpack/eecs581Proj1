@@ -54,20 +54,16 @@ def getCount(screen):
 def drawLabels(screen, xOffset, yOffset):
     font = pygame.font.Font(None, 24)
     for i in range(COLS):
-        # Column labels (A-J)
         label = font.render(chr(65 + i), True, (5, 5, 5))
         screen.blit(label, (xOffset + i * BLOCKWIDTH + BLOCKWIDTH // 2 - label.get_width() // 2, yOffset - 25))
     
     for i in range(ROWS):
-        # Row labels (1-10)
         label = font.render(str(i + 1), True, (5, 5, 5))
         screen.blit(label, (xOffset - 25, yOffset + i * BLOCKHEIGHT + BLOCKHEIGHT // 2 - label.get_height() // 2))
 
 
 def startBoard(screen, count, player):
     lineColor = (255, 255, 255)
-    boardWidth = BLOCKWIDTH * COLS
-    boardHeight = BLOCKHEIGHT * ROWS
     yOffset = 150
     xOffset = 150
 
