@@ -16,8 +16,8 @@
    - Task:
    - Hours:
  - **Day 6 (Sept 14)**: 
-   - Task:
-   - Hours:
+   - Task: Updated ReadME.md, created documentation for actual vs. estimated hours, created user logs, and created code documentation.
+   - Hours: 4 hours
   - **Day 7 (Sept 15)**: 
     - Task:
     - Hours:
