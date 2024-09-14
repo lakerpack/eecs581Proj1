@@ -13,6 +13,8 @@ class Player:
         self.num = num
         self.board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
         self.guesses = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+        self.ships = {} #n
+        self.sunk_ships = {} #n
     
     def place_ship(self, x, y, size, direction):
         if direction == 0: 
@@ -47,7 +49,32 @@ class Player:
                     return False
             for i in range(size):
                 self.board[y - i][x] = size
+
+        if size not in self.ships: #n
+            self.ships[size] = 0
+            self.sunk_ships[size] = False
         return True
+
+    def check_hit(self, x, y):  # n
+        if self.board[y][x] != 0:
+            ship_size = self.board[y][x]
+            self.guesses[y][x] = 'hit'
+            self.ships[ship_size] += 1
+
+            if self.ships[ship_size] == ship_size and not self.sunk_ships[ship_size]:
+                self.mark_ship_as_sunk(ship_size)
+            return True
+        else:
+            self.guesses[y][x] = 'miss'
+            return False
+
+    def mark_ship_as_sunk(self, ship_size): #n
+        self.sunk_ships[ship_size] = True
+        for y in range(ROWS):
+            for x in range(COLS):
+                if self.board[y][x] == ship_size:
+                    self.board[y][x] = -1
+
 
 def getCount(screen):
     font = pygame.font.Font(None, 36)
@@ -186,7 +213,9 @@ def drawBoard(screen, player):
                 if player.guesses[y][x] == 'hit':
                     pygame.draw.rect(screen, (255, 0, 0), pyRect) 
                 elif player.guesses[y][x] == 'miss':
-                    pygame.draw.rect(screen, (0, 0, 255), pyRect)  
+                    pygame.draw.rect(screen, (0, 0, 255), pyRect)
+            if player.board[y][x] == -1: #n
+                pygame.draw.rect(screen, (128, 128, 128), pyRect)
 
     drawLabels(screen, xOffset, bottomOffset)
     for x in range(COLS):
@@ -201,6 +230,8 @@ def drawBoard(screen, player):
 
 def handlePlayerTurn(screen, currentPlayer, enemy):
     waiting_for_input = True
+    x_offset = 150 #n
+    y_offset = 30
     while waiting_for_input:
         drawBoard(screen, currentPlayer)
         pygame.display.flip()
@@ -210,13 +241,32 @@ def handlePlayerTurn(screen, currentPlayer, enemy):
                 return False, None, None 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  
-                    # FOR NATHAN
-                    # FOR NATHAN
-                    # FOR NATHAN
-                    waiting_for_input = False
+                    #n
+                    mouseX, mouseY = pygame.mouse.get_pos()
+
+                    gridX = (mouseX - x_offset) // BLOCKWIDTH
+                    gridY = (mouseY - y_offset) // BLOCKHEIGHT
+
+                    if 0 <= gridX < COLS and 0 <= gridY < ROWS:
+                        if enemy.guesses[gridY][gridX] == 0:
+                            enemy.check_hit(gridX, gridY)
+                            drawBoard(screen, enemy)
+                            pygame.display.flip()
+                            if check_for_win(enemy):
+                                font = pygame.font.Font(None, 48)
+                                winner_text = font.render(f"Player {currentPlayer.num} Wins!", True, (255, 0, 0))
+                                screen.fill("skyblue")
+                                screen.blit(winner_text, (GAMEWIDTH // 2 - winner_text.get_width() // 2, GAMEHEIGHT // 2))
+                                pygame.display.flip()
+                                pygame.time.wait(3000)
+                                return False, currentPlayer, enemy
+                            waiting_for_input = False
+                        waiting_for_input = False
 
     return True, currentPlayer, enemy
 
+def check_for_win(player): #n
+    return all(player.sunk_ships.get(ship_size, False) for ship_size in player.ships)
 
 def main():
     pygame.init()
