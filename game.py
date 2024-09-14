@@ -6,7 +6,7 @@ ROWS, COLS = 10, 10
 BLOCKHEIGHT, BLOCKWIDTH = 30, 30
 GAMEHEIGHT, GAMEWIDTH = 700, 600
 
-SHIPCOLORS = {1: (255, 0, 0), 2: (0, 255, 0), 3: (0, 0, 255), 4: (255, 255, 0), 5: (255, 0, 255)}
+SHIPCOLORS = {1: (255, 100, 100), 2: (100, 255, 100), 3: (100, 100, 255), 4: (255, 255, 100), 5: (255, 100, 255)}
 
 class Player:
     def __init__(self, num):
@@ -88,7 +88,7 @@ def getCount(screen):
 
 
 def drawLabels(screen, xOffset, yOffset):
-    font = pygame.font.Font(None, 24)
+    font = pygame.font.Font(None, 26)
     for i in range(COLS):
         label = font.render(chr(65 + i), True, (5, 5, 5))
         screen.blit(label, (xOffset + i * BLOCKWIDTH + BLOCKWIDTH // 2 - label.get_width() // 2, yOffset - 25))
@@ -167,26 +167,56 @@ def startBoard(screen, count, player):
                                 waiting = False
 
 
-def drawBoard(screen, user):
+def drawBoard(screen, player):
     lineColor = (255, 255, 255)
-    boardWidth = BLOCKWIDTH * COLS
-    boardHeight = BLOCKHEIGHT * ROWS
-    yOffset = 30
+    topOffset = 30
+    bottomOffset = 400
     xOffset = 150
 
-    if user == "Enemey":
-        yOffset = 400
-
-    drawLabels(screen, xOffset, yOffset)
-
-    for x in range(0, boardWidth, BLOCKWIDTH):
-        for y in range(0, boardHeight, BLOCKHEIGHT):
-            pyRect = (x + xOffset, y + yOffset, BLOCKWIDTH, BLOCKHEIGHT)
+    drawLabels(screen, xOffset, topOffset)
+    for x in range(COLS):
+        for y in range(ROWS):
+            pyRect = (x * BLOCKWIDTH + xOffset, y * BLOCKHEIGHT + topOffset, BLOCKWIDTH, BLOCKHEIGHT)
             pygame.draw.rect(screen, lineColor, pyRect, 1)
+            if player.guesses[y][x] != 0:
+                if player.guesses[y][x] == 'hit':
+                    pygame.draw.rect(screen, (255, 0, 0), pyRect) 
+                elif player.guesses[y][x] == 'miss':
+                    pygame.draw.rect(screen, (0, 0, 255), pyRect)  
+
+    drawLabels(screen, xOffset, bottomOffset)
+    for x in range(COLS):
+        for y in range(ROWS):
+            pyRect = (x * BLOCKWIDTH + xOffset, y * BLOCKHEIGHT + bottomOffset, BLOCKWIDTH, BLOCKHEIGHT)
+            pygame.draw.rect(screen, lineColor, pyRect, 1)
+            if player.board[y][x] != 0:
+                ship_size = player.board[y][x]
+                ship_color = SHIPCOLORS.get(ship_size, (0, 255, 0))
+                pygame.draw.rect(screen, ship_color, pyRect)
+
+
+def handlePlayerTurn(screen, currentPlayer, enemy):
+    waiting_for_input = True
+    while waiting_for_input:
+        drawBoard(screen, currentPlayer)
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False, None, None 
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  
+                    # FOR NATHAN
+                    # FOR NATHAN
+                    # FOR NATHAN
+                    waiting_for_input = False
+
+    return True, currentPlayer, enemy
 
 
 def main():
     pygame.init()
+    pygame.display.set_caption("battleship")
     game = True
 
     screen = pygame.display.set_mode((GAMEWIDTH, GAMEHEIGHT))
@@ -198,12 +228,23 @@ def main():
     playerTwo = Player(2)
     # print(playerOne.board)
 
+    currentPlayer = playerOne
+    enemy = playerTwo
+
     while game:
         screen.fill("skyblue")
         if setUp:
             startBoard(screen, count, playerOne)
             startBoard(screen, count, playerTwo)
             setUp = False
+        else:
+            font = pygame.font.Font(None, 28)
+            turn_text = font.render(f"Player {currentPlayer.num}'s Turn", True, (5, 5, 5))
+            screen.blit(turn_text, (GAMEWIDTH // 2 - turn_text.get_width() // 2, 350))
+            
+            game, currentPlayer, enemy = handlePlayerTurn(screen, currentPlayer, enemy)
+            if game:
+                currentPlayer, enemy = enemy, currentPlayer
 
         pygame.display.flip()
         for event in pygame.event.get():
