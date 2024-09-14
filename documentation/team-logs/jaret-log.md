@@ -1,23 +1,23 @@
 # Jaret's Work Log
 ## Daily Accounting of Hours
-- **Day 1 (Sept 10)**: 
+- **Day 1 (Sept 9)**: 
   - Task:
   - Hours:
-- **Day 2 (Sept 11)**: 
+- **Day 2 (Sept 10)**: 
   - Task:
   - Hours:
- - **Day 3 (Sept 12)**: 
+ - **Day 3 (Sept 11)**: 
    - Task:
    - Hours:
- - **Day 4 (Sept 13)**: 
+ - **Day 4 (Sept 12)**: 
    - Task:
    - Hours:
- - **Day 5 (Sept 14)**: 
+ - **Day 5 (Sept 13)**: 
    - Task:
    - Hours:
- - **Day 6 (Sept 15)**: 
+ - **Day 6 (Sept 14)**: 
    - Task:
    - Hours:
-  - **Day 7 (Sept 16)**: 
+  - **Day 7 (Sept 15)**: 
     - Task:
     - Hours:
