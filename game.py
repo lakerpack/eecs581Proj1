@@ -81,11 +81,20 @@ def startBoard(screen, count, player):
 
         drawLabels(screen, xOffset, yOffset)
 
-        for x in range(0, boardWidth, BLOCKWIDTH):
-            for y in range(0, boardHeight, BLOCKHEIGHT):
-                pyRect = (x + xOffset, y + yOffset, BLOCKWIDTH, BLOCKHEIGHT)
+        mouseX, mouseY = pygame.mouse.get_pos()
+        hoverX = (mouseX - xOffset) // BLOCKWIDTH
+        hoverY = (mouseY - yOffset) // BLOCKHEIGHT
+
+        for x in range(COLS):
+            for y in range(ROWS):
+                pyRect = (x * BLOCKWIDTH + xOffset, y * BLOCKHEIGHT + yOffset, BLOCKWIDTH, BLOCKHEIGHT)
+                
+                if x == hoverX and y == hoverY and 0 <= x < COLS and 0 <= y < ROWS:
+                    pygame.draw.rect(screen, (200, 200, 200), pyRect)
+                
                 pygame.draw.rect(screen, lineColor, pyRect, 1)
 
+        print(hoverX, hoverY)
         pygame.display.flip()
 
         for event in pygame.event.get():
