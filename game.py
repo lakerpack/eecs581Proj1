@@ -1,3 +1,14 @@
+"""
+Name: Battleship
+Description: An implmentation of battleship that follows the guidelines outlined in the rubric. 
+Players will determine how many ships at the start, and will guess ships on the enemy's board, switching after each guess.
+Inputs: Number of battleships, Rotation/Alignment of ship placement, Where to hit a ship
+Output: A functional battleship game that ends after all ships of one side has been sunk. 
+Other Sources: N/A (edit this if you have any Nathan)
+Author(s): Anil Thapa, Michelle Chen, Nathan Bui
+Creation Date: 09/13/2024
+"""
+
 import sys
 import pygame
 
