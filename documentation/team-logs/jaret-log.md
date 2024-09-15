@@ -1,8 +1,8 @@
 # Jaret's Work Log
 ## Daily Accounting of Hours
 - **Day 1 (Sept 9)**: 
-  - Task:
-  - Hours:
+  - Task: GTA + sprint meetings
+  - Hours: 1
 - **Day 2 (Sept 10)**: 
   - Task:
   - Hours:
@@ -19,5 +19,5 @@
    - Task: Updated ReadME.md, created documentation for actual vs. estimated hours, created user logs, and created code documentation.
    - Hours: 4 hours
   - **Day 7 (Sept 15)**: 
-    - Task:
-    - Hours:
+    - Task: Worked on completing estimated hours doc + updating readME w/ new images.
+    - Hours: 1
