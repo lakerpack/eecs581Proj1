@@ -1,8 +1,8 @@
 # Michelle's Work Log
 ## Daily Accounting of Hours
 - **Day 1 (Sept 9)**: 
-  - Task: GTA meeting
-  - Hours: 0.5
+  - Task: GTA meeting + Sprint meeting
+  - Hours: 1
 - **Day 2 (Sept 10)**: 
   - Task:
   - Hours:
