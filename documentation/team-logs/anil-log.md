@@ -1,8 +1,8 @@
 # Anil's Work Log
 ## Daily Accounting of Hours
 - **Day 1 (Sept 9)**: 
-  - Task:
-  - Hours:
+  - Task: GTA meeting
+  - Hours: 0.5
 - **Day 2 (Sept 10)**: 
   - Task:
   - Hours:
@@ -13,11 +13,11 @@
    - Task:
    - Hours:
  - **Day 5 (Sept 13)**: 
-   - Task:
-   - Hours:
+   - Task: Coding
+   - Hours: 3
  - **Day 6 (Sept 14)**: 
    - Task:
    - Hours:
   - **Day 7 (Sept 15)**: 
-    - Task:
-    - Hours:
+    - Task: Commenting
+    - Hours: 2
