@@ -15,6 +15,10 @@ A Python implementation of the classic battleship game using the pygame library.
 ![Player 1 Ship Placement](images/player_1.png)
 ![Player 2 Ship Placement](images/player_2.png)
 ![Gameplay](images/gameplay.png)
+![Action Gameplay](images/in_game.png)
+![Hit Screen](images/hit.png)
+![Miss Screen](images/miss.png)
+![Winner Screen](images/player_2_wins.png)
 
 ## How to Play
 
