@@ -55,25 +55,25 @@ class Player:
             self.sunk_ships[size] = False
         return True
 
-    def check_hit(self, x, y):  # n
-        if self.board[y][x] != 0:
-            ship_size = self.board[y][x]
+    def check_hit(self, enemy, x, y):  # n
+        if enemy.board[y][x] > 0:
+            ship_size = enemy.board[y][x]
             self.guesses[y][x] = 'hit'
-            self.ships[ship_size] += 1
+            enemy.ships[ship_size] += 1
 
-            if self.ships[ship_size] == ship_size and not self.sunk_ships[ship_size]:
-                self.mark_ship_as_sunk(ship_size)
+            if enemy.ships[ship_size] == ship_size and not enemy.sunk_ships[ship_size]:
+                enemy.mark_ship_as_sunk(self, ship_size)
             return True
         else:
             self.guesses[y][x] = 'miss'
             return False
 
-    def mark_ship_as_sunk(self, ship_size): #n
+    def mark_ship_as_sunk(self, currentPlayer, ship_size): #n
         self.sunk_ships[ship_size] = True
         for y in range(ROWS):
             for x in range(COLS):
                 if self.board[y][x] == ship_size:
-                    self.board[y][x] = -1
+                    currentPlayer.guesses[y][x] = 'sunk'
 
 
 def getCount(screen):
@@ -198,7 +198,7 @@ def startBoard(screen, count, player):
                                 waiting = False
 
 
-def drawBoard(screen, player):
+def drawBoard(screen, player, enemy):
     lineColor = (255, 255, 255)
     topOffset = 30
     bottomOffset = 400
@@ -211,11 +211,11 @@ def drawBoard(screen, player):
             pygame.draw.rect(screen, lineColor, pyRect, 1)
             if player.guesses[y][x] != 0:
                 if player.guesses[y][x] == 'hit':
-                    pygame.draw.rect(screen, (255, 0, 0), pyRect) 
+                    pygame.draw.rect(screen, (255, 0, 0), pyRect)
                 elif player.guesses[y][x] == 'miss':
                     pygame.draw.rect(screen, (0, 0, 255), pyRect)
-            if player.board[y][x] == -1: #n
-                pygame.draw.rect(screen, (128, 128, 128), pyRect)
+                elif player.guesses[y][x] == 'sunk':  # n
+                    pygame.draw.rect(screen, (128, 128, 128), pyRect)
 
     drawLabels(screen, xOffset, bottomOffset)
     for x in range(COLS):
@@ -226,14 +226,20 @@ def drawBoard(screen, player):
                 ship_size = player.board[y][x]
                 ship_color = SHIPCOLORS.get(ship_size, (0, 255, 0))
                 pygame.draw.rect(screen, ship_color, pyRect)
-
+            if enemy.guesses[y][x] != 0:
+                if enemy.guesses[y][x] == 'hit':
+                    pygame.draw.rect(screen, (255, 0, 0), pyRect)
+                elif enemy.guesses[y][x] == 'miss':
+                    pygame.draw.rect(screen, (0, 0, 255), pyRect)
+                elif enemy.guesses[y][x] == 'sunk': #n
+                    pygame.draw.rect(screen, (128, 128, 128), pyRect)
 
 def handlePlayerTurn(screen, currentPlayer, enemy):
     waiting_for_input = True
     x_offset = 150 #n
     y_offset = 30
     while waiting_for_input:
-        drawBoard(screen, currentPlayer)
+        drawBoard(screen, currentPlayer, enemy)
         pygame.display.flip()
 
         for event in pygame.event.get():
@@ -248,11 +254,9 @@ def handlePlayerTurn(screen, currentPlayer, enemy):
                     gridY = (mouseY - y_offset) // BLOCKHEIGHT
 
                     if 0 <= gridX < COLS and 0 <= gridY < ROWS:
-                        if enemy.guesses[gridY][gridX] == 0:
-                            enemy.check_hit(gridX, gridY)
-                            drawBoard(screen, currentPlayer)
-                            pygame.display.flip()
-                            if check_for_win(enemy):
+                        if currentPlayer.guesses[gridY][gridX] == 0:
+                            currentPlayer.check_hit(enemy, gridX, gridY)
+                            if check_for_win(currentPlayer):
                                 font = pygame.font.Font(None, 48)
                                 winner_text = font.render(f"Player {currentPlayer.num} Wins!", True, (255, 0, 0))
                                 screen.fill("skyblue")
