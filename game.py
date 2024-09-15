@@ -296,43 +296,43 @@ def handlePlayerTurn(screen, currentPlayer, enemy): # (N)
 def check_for_win(player): #n
     return all(player.sunk_ships.get(ship_size, False) for ship_size in player.ships)
 
-def main():
-    pygame.init()
-    pygame.display.set_caption("battleship")
-    game = True
+def main(): # (A) main function that starts the game
+    pygame.init() # (A) initialize the pygame engine so it can listen for inputs/handle screens
+    pygame.display.set_caption("battleship") # (A) set up the title of the game
+    game = True # (A) game conditional loop
 
-    screen = pygame.display.set_mode((GAMEWIDTH, GAMEHEIGHT))
-    clock = pygame.time.Clock()
-    count = getCount(screen)
-    setUp = True
+    screen = pygame.display.set_mode((GAMEWIDTH, GAMEHEIGHT)) # (A) the main screen that gets passed around, initialized with a display of GAMEWIDTH and GAMEHEIGHT
+    clock = pygame.time.Clock() # (A) clock that keeps track of how many times the screen is updated
+    count = getCount(screen) # (A) initial getCount() will be the default starting screen to find how many ships to play with
+    setUp = True # (A) check that'll only run the startBoard() once for ships
 
-    playerOne = Player(1)
-    playerTwo = Player(2)
+    playerOne = Player(1) # (A) initialize playerOne, with a Player(num)-- num marker of 1 to differentiate
+    playerTwo = Player(2) # (A) playertwo with player.num = 2
     # print(playerOne.board)
 
-    currentPlayer = playerOne
-    enemy = playerTwo
+    currentPlayer = playerOne # (A) game will start with playerOne, so currentPlayer is initialized
+    enemy = playerTwo # (A) enemy for now is playerTwo, but these roles will be swapped every game loop
 
-    while game:
-        screen.fill("skyblue")
-        if setUp:
-            startBoard(screen, count, playerOne)
-            startBoard(screen, count, playerTwo)
-            setUp = False
-        else:
-            font = pygame.font.Font(None, 28)
-            turn_text = font.render(f"Player {currentPlayer.num}'s Turn", True, (5, 5, 5))
-            screen.blit(turn_text, (GAMEWIDTH // 2 - turn_text.get_width() // 2, 350))
+    while game: # (A) while the game is running
+        screen.fill("skyblue") # (A) fill the background with skyblue
+        if setUp: # (A) conditional met with first time run of the loop
+            startBoard(screen, count, playerOne) # (A) create the matrix for playerOne with ship selection
+            startBoard(screen, count, playerTwo) # (A) do the same for playerTwo
+            setUp = False # (A) set condition to false, won't run again for remainder of the game
+        else: # (A) when the boards have been set up
+            font = pygame.font.Font(None, 28) # (A) font object with no font type and 28 font size
+            turn_text = font.render(f"Player {currentPlayer.num}'s Turn", True, (5, 5, 5)) # (A) render the text 
+            screen.blit(turn_text, (GAMEWIDTH // 2 - turn_text.get_width() // 2, 350)) # (A) push the rendered text to the top of the screen, placed horizontal and in the middle vertically
             
-            game, currentPlayer, enemy = handlePlayerTurn(screen, currentPlayer, enemy)
-            if game:
-                currentPlayer, enemy = enemy, currentPlayer
+            game, currentPlayer, enemy = handlePlayerTurn(screen, currentPlayer, enemy) # (A) handle the player turn, will swap players (curr/enemy) after each successful playerturn
+            if game: # (A) if the game is still going on... may be a redundant conditional in hindsight
+                currentPlayer, enemy = enemy, currentPlayer # (A) then swap the two players
 
-        pygame.display.flip()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game = False
-        clock.tick(FPS)
+        pygame.display.flip() # (A) flip to update the display as needed
+        for event in pygame.event.get(): # (A) listen to events
+            if event.type == pygame.QUIT: # (A) if user exits out
+                game = False # (A) game is over
+        clock.tick(FPS) # (A) FPS (initialized at the start of the code) will determine refresh rate for the game
 
 
 if __name__ == "__main__": # (A) basic name=main check so it doesn't automatically run if called in a module
