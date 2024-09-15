@@ -60,7 +60,6 @@ class Player:
             ship_size = enemy.board[y][x]
             self.guesses[y][x] = 'hit'
             enemy.ships[ship_size] += 1
-
             if enemy.ships[ship_size] == ship_size and not enemy.sunk_ships[ship_size]:
                 enemy.mark_ship_as_sunk(self, ship_size)
             return True
@@ -238,6 +237,7 @@ def handlePlayerTurn(screen, currentPlayer, enemy):
     waiting_for_input = True
     x_offset = 150 #n
     y_offset = 30
+    font = pygame.font.Font(None, 36)
     while waiting_for_input:
         drawBoard(screen, currentPlayer, enemy)
         pygame.display.flip()
@@ -255,8 +255,20 @@ def handlePlayerTurn(screen, currentPlayer, enemy):
 
                     if 0 <= gridX < COLS and 0 <= gridY < ROWS:
                         if currentPlayer.guesses[gridY][gridX] == 0:
-                            currentPlayer.check_hit(enemy, gridX, gridY)
-                            if check_for_win(currentPlayer):
+                            if currentPlayer.check_hit(enemy, gridX, gridY):
+                                hit_text = font.render(f"Hit", True, (255, 0, 0))
+                                screen.fill("skyblue")
+                                screen.blit(hit_text, (GAMEWIDTH // 2 - hit_text.get_width() // 2, GAMEHEIGHT // 2))
+                                pygame.display.flip()
+                                pygame.time.wait(500)
+                            else:
+                                miss_text = font.render(f"Miss", True, (0, 0, 255))
+                                screen.fill("skyblue")
+                                screen.blit(miss_text, (GAMEWIDTH // 2 - miss_text.get_width() // 2, GAMEHEIGHT // 2))
+                                pygame.display.flip()
+                                pygame.time.wait(500)
+                            drawBoard(screen, currentPlayer, enemy)
+                            if check_for_win(enemy):
                                 font = pygame.font.Font(None, 48)
                                 winner_text = font.render(f"Player {currentPlayer.num} Wins!", True, (255, 0, 0))
                                 screen.fill("skyblue")
