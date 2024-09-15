@@ -1,11 +1,11 @@
 # Nathan's Work Log
 ## Daily Accounting of Hours
 - **Day 1 (Sept 9)**: 
-  - Task:
-  - Hours:
+  - Task: GTA meeting and meeting with team
+  - Hours: 1
 - **Day 2 (Sept 10)**: 
-  - Task:
-  - Hours:
+  - Task: Research on the Pygame Module for Python
+  - Hours: 1.5
  - **Day 3 (Sept 11)**: 
    - Task:
    - Hours:
@@ -16,8 +16,8 @@
    - Task:
    - Hours:
  - **Day 6 (Sept 14)**: 
-   - Task:
-   - Hours:
+   - Task: Writing relevant functions in the program for hit/miss confirmation, ships being sunk, and players winning the game
+   - Hours: 5
   - **Day 7 (Sept 15)**: 
-    - Task:
-    - Hours:
+    - Task: Added comments to the parts of the program that I coded, as well as updating some parts of the code documentation to include the functions created by me
+    - Hours: 1.5
