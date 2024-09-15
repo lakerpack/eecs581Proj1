@@ -10,50 +10,50 @@ Creation Date: 09/13/2024
 """
 
 import sys
-import pygame
+import pygame # (A) module that provides a GUI library we use as the primary runner of the game
 
-FPS = 30
-ROWS, COLS = 10, 10
-BLOCKHEIGHT, BLOCKWIDTH = 30, 30
-GAMEHEIGHT, GAMEWIDTH = 700, 600
+FPS = 30 # (A) global var to determine refresh rate of the game 
+ROWS, COLS = 10, 10 # (A) how many blocks in the rows and cols will be used to calculate positionings (10x10 is standard battleship)
+BLOCKHEIGHT, BLOCKWIDTH = 30, 30 # (A) height of each block for the board 
+GAMEHEIGHT, GAMEWIDTH = 700, 600 # (A) height/width of the actual game window 
 
-SHIPCOLORS = {1: (255, 100, 100), 2: (100, 255, 100), 3: (100, 100, 255), 4: (255, 255, 100), 5: (255, 100, 255)}
+SHIPCOLORS = {1: (255, 100, 100), 2: (100, 255, 100), 3: (100, 100, 255), 4: (255, 255, 100), 5: (255, 100, 255)} # (A) global colors for different type of ships
 
-class Player:
-    def __init__(self, num):
-        self.num = num
-        self.board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
-        self.guesses = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+class Player: # stores the data for each player so we can alternate easily with each turn based on the Player data
+    def __init__(self, num): # (A) initialization
+        self.num = num # (A) player num to keep track of who's who  without anything fancy 
+        self.board = [[0 for _ in range(COLS)] for _ in range(ROWS)] # (A) initialize player's matrix based on game board to reflect ship states
+        self.guesses = [[0 for _ in range(COLS)] for _ in range(ROWS)] # (A) similarly, a matrix to reflect guesses on the enemy that are accurate/misses
         self.ships = {} #n
         self.sunk_ships = {} #n
     
-    def place_ship(self, x, y, size, direction):
-        if direction == 0: 
-            if x + size > COLS:
-                return False
-            for i in range(size):
-                if self.board[y][x + i] != 0:
-                    return False
-            for i in range(size):
-                self.board[y][x + i] = size
-        elif direction == 1: 
-            if y + size > ROWS:
+    def place_ship(self, x, y, size, direction): # (A) return if valid placement based on player's board 
+        if direction == 0: # (A) refers to the current direction being used in the start screen that was passed through (0 is to the right)
+            if x + size > COLS: # (A) too large for the board
+                return False # (A) not a valid move
+            for i in range(size): # (A) now if not too large, we must calculate if there are any collisions with other placements
+                if self.board[y][x + i] != 0: # (A) if not 0 so not free in the path of placement...
+                    return False # (A) then this is not a valid move 
+            for i in range(size): # (A) otherwise, replace the path with ships of size
+                self.board[y][x + i] = size # (A) important to set nodes in the path to 'size' because that will distinguish different ships 
+        elif direction == 1: # (A) similarly, refer to the above; direction == 1 means it is a path pointing down 
+            if y + size > ROWS: 
                 return False
             for i in range(size):
                 if self.board[y + i][x] != 0:
                     return False
             for i in range(size):
                 self.board[y + i][x] = size
-        elif direction == 2: 
-            if x - size + 1 < 0:
+        elif direction == 2: # (A) direction == 2 means it is a path pointing to the left
+            if x - size + 1 < 0: # (A) distinction between this conditinoal and the above is that 0 can be valid, but ROWS/COLS cannot hence the + 1 
                 return False
             for i in range(size):
                 if self.board[y][x - i] != 0:
                     return False
             for i in range(size):
                 self.board[y][x - i] = size
-        elif direction == 3: 
-            if y - size + 1 < 0:
+        elif direction == 3: # (A) direction == 3 means it is a path pointing to the top 
+            if y - size + 1 < 0: # (A) same explanation as direction == 2 for this conditional
                 return False
             for i in range(size):
                 if self.board[y - i][x] != 0:
