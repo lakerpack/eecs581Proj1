@@ -208,34 +208,34 @@ def startBoard(screen, count, player): # (A) startboard will have the user (curr
                                 waiting = False # (A) break the loop otherwise
 
 
-def drawBoard(screen, player, enemy):
-    lineColor = (255, 255, 255)
-    topOffset = 30
-    bottomOffset = 400
-    xOffset = 150
+def drawBoard(screen, player, enemy): # (M) function that draws the board in the main game loop
+    lineColor = (255, 255, 255) # (M) color of the lines 
+    topOffset = 30 # (M) offset we add so the column labels don't go off the screen for the top board 
+    bottomOffset = 400 # (M) bottom offset to push the bottom board down 
+    xOffset = 150 # (M) horizontal offset to center the boards
 
-    drawLabels(screen, xOffset, topOffset)
-    for x in range(COLS):
-        for y in range(ROWS):
-            pyRect = (x * BLOCKWIDTH + xOffset, y * BLOCKHEIGHT + topOffset, BLOCKWIDTH, BLOCKHEIGHT)
-            pygame.draw.rect(screen, lineColor, pyRect, 1)
-            if player.guesses[y][x] != 0:
-                if player.guesses[y][x] == 'hit':
-                    pygame.draw.rect(screen, (255, 0, 0), pyRect)
-                elif player.guesses[y][x] == 'miss':
-                    pygame.draw.rect(screen, (0, 0, 255), pyRect)
+    drawLabels(screen, xOffset, topOffset) # (M) draw labels on the top board
+    for x in range(COLS): # (M) iterate through each column
+        for y in range(ROWS): # (M) iterate through each row
+            pyRect = (x * BLOCKWIDTH + xOffset, y * BLOCKHEIGHT + topOffset, BLOCKWIDTH, BLOCKHEIGHT) # (M) create a tuple for the rectangle object (x, y, width, height)
+            pygame.draw.rect(screen, lineColor, pyRect, 1) # (M) at the same time, we draw the grids for the board 
+            if player.guesses[y][x] != 0: # (M) if the guess board does not have 0 at the guess matrix, it has one of 3 conditions
+                if player.guesses[y][x] == 'hit': # (M) the guess was a hit
+                    pygame.draw.rect(screen, (255, 0, 0), pyRect) # (M) draw red on the spot for a hit
+                elif player.guesses[y][x] == 'miss': # (M) the guess was a miss
+                    pygame.draw.rect(screen, (0, 0, 255), pyRect) # (M) draw blue on the spot for a miss
                 elif player.guesses[y][x] == 'sunk':  # n
                     pygame.draw.rect(screen, (128, 128, 128), pyRect)
 
-    drawLabels(screen, xOffset, bottomOffset)
-    for x in range(COLS):
+    drawLabels(screen, xOffset, bottomOffset) # (M) now draw the labels but on the bottom board, so we use bottom offset
+    for x in range(COLS): # (M) iterate through all the columns and rows again
         for y in range(ROWS):
-            pyRect = (x * BLOCKWIDTH + xOffset, y * BLOCKHEIGHT + bottomOffset, BLOCKWIDTH, BLOCKHEIGHT)
-            pygame.draw.rect(screen, lineColor, pyRect, 1)
-            if player.board[y][x] != 0:
-                ship_size = player.board[y][x]
-                ship_color = SHIPCOLORS.get(ship_size, (0, 255, 0))
-                pygame.draw.rect(screen, ship_color, pyRect)
+            pyRect = (x * BLOCKWIDTH + xOffset, y * BLOCKHEIGHT + bottomOffset, BLOCKWIDTH, BLOCKHEIGHT) # (M) same as above, we create a tuple for the rectangle (x, y, width, height)
+            pygame.draw.rect(screen, lineColor, pyRect, 1) # (M) and just like with the top board, draw the grids for the board
+            if player.board[y][x] != 0: # (M) since this is the player's board, we check the matrix to see if there are any ships at the spot
+                ship_size = player.board[y][x] # (M) get the type of ship from the player's board
+                ship_color = SHIPCOLORS.get(ship_size, (0, 255, 0)) # (M) get the type of color from matching it to the global colors
+                pygame.draw.rect(screen, ship_color, pyRect) # (M) draw the colored square onto the board
             if enemy.guesses[y][x] != 0:
                 if enemy.guesses[y][x] == 'hit':
                     pygame.draw.rect(screen, (255, 0, 0), pyRect)
@@ -244,14 +244,15 @@ def drawBoard(screen, player, enemy):
                 elif enemy.guesses[y][x] == 'sunk': #n
                     pygame.draw.rect(screen, (128, 128, 128), pyRect)
 
-def handlePlayerTurn(screen, currentPlayer, enemy):
-    waiting_for_input = True
+
+def handlePlayerTurn(screen, currentPlayer, enemy): # (N)
+    waiting_for_input = True # (A) wait for input so the screen doesn't instantly move
     x_offset = 150 #n
     y_offset = 30
     font = pygame.font.Font(None, 36)
-    while waiting_for_input:
-        drawBoard(screen, currentPlayer, enemy)
-        pygame.display.flip()
+    while waiting_for_input: # (A) input waiting loop
+        drawBoard(screen, currentPlayer, enemy) # (A) draw the board based on player/enemy data (top is guesses, bottom is player)
+        pygame.display.flip() # (A) update the screen with the rendered boards, and then wait for player to make a decision
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -334,5 +335,5 @@ def main():
         clock.tick(FPS)
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__": # (A) basic name=main check so it doesn't automatically run if called in a module
+    main() # (A) if intended, then now run main()
