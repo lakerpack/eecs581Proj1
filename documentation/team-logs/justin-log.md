@@ -1,8 +1,8 @@
 # Justin's Work Log
 ## Daily Accounting of Hours
 - **Day 1 (Sept 9)**: 
-  - Task:
-  - Hours:
+  - Task: Gta meeting
+  - Hours: 0.5 hour
 - **Day 2 (Sept 10)**: 
   - Task:
   - Hours:
@@ -16,8 +16,8 @@
    - Task:
    - Hours:
  - **Day 6 (Sept 14)**: 
-   - Task:
-   - Hours:
+   - Task: Testing
+   - Hours: 1 hour
   - **Day 7 (Sept 15)**: 
-    - Task:
-    - Hours:
+    - Task: Testing
+    - Hours: 0.75 hour
